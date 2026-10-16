@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ученорд • Інтелектуальний Математичний AI</title>
+    <style>
+        :root {
+            --bg-base: #090d16;
+            --bg-panel: #131a2e;
+            --bg-card: #1c2642;
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.4);
+            --accent: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #10b981;
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-panel: #ffffff;
+            --bg-card: #f1f5f9;
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.25);
+            --accent: #0284c7;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.08);
+            --success: #059669;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 480px;
+            margin: 0 auto;
+            overflow: hidden;
+            transition: background 0.3s ease;
+        }
+
+        /* Екран реєстрації / авторизації */
+        #authScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-base);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            z-index: 1000;
+            transition: opacity 0.4s ease;
+        }
+
+        .auth-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
+
+        .auth-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .auth-card h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .auth-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 14px;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        /* Основний інтерфейс */
+        header {
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 50;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .logo-text h1 {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .logo-text span {
+            font-size: 11px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .top-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-icon {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .view-section {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 16px;
+            scroll-behavior: smooth;
+        }
+
+        .view-section.active {
+            display: flex;
+        }
+
+        .message-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-width: 92%;
+            margin-bottom: 14px;
+        }
+
+        .message-row.user { align-self: flex-end; }
+        .message-row.bot { align-self: flex-start; }
+
+        .bubble {
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .user .bubble {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot .bubble {
+            background: var(--bg-panel);
+            color: var(--text-main);
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .topic-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .topic-card:active {
+            transform: scale(0.97);
+            background: var(--bg-card);
+        }
+
+        .topic-card h4 {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--accent);
+        }
+
+        .topic-card p {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .footer-input {
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-box {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-size: 14px;
+            padding: 12px 0;
+        }
+
+        input::placeholder { color: var(--text-muted); }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <!-- Екран реєстрації в стилі Astro AI -->
+    <div id="authScreen">
+        <div class="auth-card">
+            <div class="auth-logo">📐</div>
+            <h2>Ученорд • Математика</h2>
+            <p>Введіть своє ім'я, щоб розпочати навчання</p>
+            <input type="text" id="usernameInput" class="auth-input" placeholder="Ваше ім'я..." autocomplete="off">
+            <button class="auth-btn" onclick="registerUser()">Увійти до системи</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">📐</div>
+            <div class="logo-text">
+                <h1>Ученорд AI</h1>
+                <span id="userStatus">🟢 Онлайн</span>
+            </div>
+        </div>
+        <div class="top-btns">
+            <button class="btn-icon" onclick="toggleTheme()">🌓</button>
+            <button class="btn-icon" onclick="resetAccount()">🔄</button>
+        </div>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('chat', this)">💬 Чат з Ученордом</button>
+        <button class="tab-btn" onclick="switchTab('topics', this)">📚 База знань</button>
+    </div>
+
+    <!-- Чат секція -->
+    <div class="view-section active" id="chatSection">
+        <div id="chatFeed">
+            <div class="message-row bot">
+                <div class="bubble" id="welcomeMsg">Вітаю! Я — <b>Ученорд</b>, твій персональний розумний репетитор з математики за всі класи. Я пояснюю складні правила, формули й задачі простими словами, без зайвої води. Що будемо розбирати сьогодні?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- База знань секція -->
+    <div class="view-section" id="topicsSection">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Вибери розділ математики для швидкого пояснення:</p>
+        <div class="topics-grid">
+            <div class="topic-card" onclick="quickAsk('Поясни дроби простими словами')">
+                <h4>🧮 Дроби</h4>
+                <p>Звичайні та десяткові, додавання і множення.</p>
+            </div>
+            <div class="topic-card" onclick="quickAsk('Що таке рівняння і як їх розв\'язувати')">
+                <h4>⚖️ Рівняння</h4>
+                <p>Прості та системні рівняння з іксом ($x$).</p>
+            </div>
+            <div class="topic-card" onclick="quickAsk('Як знаходити відсотки від числа')">
+                <h4>📊 Відсотки</h4>
+                <p>Знижки, націнки та пропорції.</p>
+            </div>
+            <div class="topic-card" onclick="quickAsk('Формули скороченого множення')">
+                <h4>✨ Формули</h4>
+                <p>Квадрат суми, різниці та інші.</p>
+            </div>
+            <div class="topic-card" onclick="quickAsk('Теорема Піфагора та трикутники')">
+                <h4>📐 Геометрія</h4>
+                <p>Сторони, кути, площі фігур.</p>
+            </div>
+            <div class="topic-card" onclick="quickAsk('Квадратні рівняння через дискримінант')">
+                <h4>📈 Алгебра</h4>
+                <p>Дискримінант, корені та параболи.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-input">
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="Задай питання з математики..." autocomplete="off">
+        </div>
+        <button class="send-btn" onclick="sendMessage()">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        const chatFeed = document.getElementById('chatFeed');
+        const userInput = document.getElementById('userInput');
+        const authScreen = document.getElementById('authScreen');
+        const usernameInput = document.getElementById('usernameInput');
+        const welcomeMsg = document.getElementById('welcomeMsg');
+
+        let currentUser = localStorage.getItem('ucenord_user') || '';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (currentUser) {
+                authScreen.style.display = 'none';
+                welcomeMsg.innerHTML = `Привіт, <b>${currentUser}</b>! Я — <b>Ученорд</b>, твій особистий репетитор з математики. Пояснюю все просто і зрозуміло за всі класи. Запитуй будь-що!`;
+            }
+        });
+
+        function registerUser() {
+            const name = usernameInput.value.trim();
+            if (!name) {
+                alert('Будь ласка, введіть своє ім\'я!');
+                return;
+            }
+            localStorage.setItem('ucenord_user', name);
+            currentUser = name;
+            authScreen.style.opacity = '0';
+            setTimeout(() => {
+                authScreen.style.display = 'none';
+                welcomeMsg.innerHTML = `Привіт, <b>${currentUser}</b>! Я — <b>Ученорд</b>, твій особистий репетитор з математики. Пояснюю все просто і зрозуміло за всі класи. Запитуй будь-що!`;
+            }, 400);
+        }
+
+        function resetAccount() {
+            if(confirm("Змінити користувача?")) {
+                localStorage.removeItem('ucenord_user');
+                location.reload();
+            }
+        }
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function switchTab(tabName, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            if(tabName === 'chat') {
+                document.getElementById('chatSection').classList.add('active');
+            } else {
+                document.getElementById('topicsSection').classList.add('active');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        }
+
+        function quickAsk(text) {
+            userInput.value = text;
+            switchTab('chat', document.querySelectorAll('.tab-btn')[0]);
+            sendMessage();
+        }
+
+        // ВЕЛИЧЕЗНА ЕНЦИКЛОПЕДИЧНА БАЗА ЗНАНЬ УЧЕНОРДА З МАТЕМАТИКИ
+        function getUcenordMathAnswer(query) {
+            const q = query.toLowerCase();
+
+            if (q.includes('дроб') || q.includes('знаменник') || q.includes('чисельник')) {
+                return `🧮 **Пояснення про дроби простими словами:**\n\nДріб — це звичайна частина чогось цілого (наприклад, піци):\n• **Чисельник** (зверху) — скільки шматочків ми взяли.\n• **Знаменник** (знизу) — на скільки рівних шматочків поділили всю піцу.\n\n*Як додавати дроби?* Якщо знизу (знаменник) числа однакові — просто додаємо верхні числа, а низ залишаємо без змін. Якщо різні — спочатку знаходимо спільний знаменник!`;
+            }
+            else if (q.includes('рівнян') || q.includes('ікс') || q.includes('x')) {
+                return `⚖️ **Як розв'язувати рівняння:**\n\nРівняння — це як ваги в рівновазі. Головна мета: залишити невідоме ($x$) з одного боку, а всі числа перенести на інший.\n• Коли переносимо число через знак «дорівнює» ($=$), його знак змінюється на протилежний (було $+$, стає $-$; було $\\times$, стає діленням).\n\n*Приклад:* $x + 5 = 12$ $\\rightarrow$ $x = 12 - 5$ $\\rightarrow$ $x = 7$. Усе дуже просто!`;
+            }
+            else if (q.includes('відсотк') || q.includes('%')) {
+                return `📊 **Як рахувати відсотки:**\n\nВідсоток — це сота частина від числа ($1\\% = 0.01$).\n• *Як знайти відсоток від числа?* Потрібно число помножити на відсоток і поділити на 100.\n• *Приклад:* Треба знайти $20\\%$ від числа $150$.\nМножимо: $150 \\times 20 = 3000$, ділимо на $100$ = **30**. Готово!`;
+            }
+            else if (q.includes('дискримінант') || q.includes('квадратн') || q.includes('корені')) {
+                return `📈 **Квадратні рівняння та дискримінант:**\n\nРівняння має вигляд: $ax^2 + bx + c = 0$.\nФормула дискримінанта ($D$):\n$$D = b^2 - 4ac$$\n\n• Якщо **$D > 0$** — рівняння має **2 різні корені**.\n• Якщо **$D = 0$** — має **1 корінь**.\n• Якщо **$D < 0$** — дійсних коренів немає.\nДалі знаходимо $x$ за простою формулою: $x = \\frac{-b \\pm \\sqrt{D}}{2a}$.`;
+            }
+            else if (q.includes('піфагор') || q.includes('трикутниц') || q.includes('геометр')) {
+                return `📐 **Теорема Піфагора:**\n\nПрацює виключно у прямокутних трикутниках (де є кут $90^\\circ$):\n$$a^2 + b^2 = c^2$$\n\nДе $a$ і $b$ — це короткі сторони (катети), а $c$ — найдовша сторона навпроти прямого кута (гіпотенуза). Якщо знаєш дві сторони, завжди легко знайти третю!`;
+            }
+            else {
+                return `📐 Я уважно проаналізував твоє питання. У моїй базі знань є повний курс математики за всі класи (арифметика, дроби, рівняння, геометрія, функції та вища математика). Задай конкретне число, задачу чи тему, і я покроково розпишу все простими словами!`;
+            }
+        }
+
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            appendMsg(text, 'user');
+            userInput.value = '';
+
+            setTimeout(() => {
+                const answer = getUcenordMathAnswer(text);
+                appendMsg(answer, 'bot');
+            }, 400);
+        }
+
+        function appendMsg(text, sender) {
+            const row = document.createElement('div');
+            row.className = `message-row ${sender}`;
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.innerHTML = text.replace(/\n/g, '<br>');
+            row.appendChild(bubble);
+            chatFeed.appendChild(row);
+            document.getElementById('chatSection').scrollTop = document.getElementById('chatSection').scrollHeight;
+        }
+    </script>
+</body>
+</html>
